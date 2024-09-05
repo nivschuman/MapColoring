@@ -63,7 +63,8 @@ def paint_map(nodes, compare_nodes):
                 neighbor.add_neighbors(selected_node)
                 neighbor.add_color(color)
 
-            return False
+            # try next color
+            continue
 
         # select color for selected node
         selected_node.chosen_color = color
