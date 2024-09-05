@@ -44,9 +44,26 @@ def paint_map(nodes, compare_nodes):
         nodes.remove(selected_node)
 
         # remove selected node from neighbors and the chosen color
+        neighbor_has_no_colors = False
+
         for neighbor in neighboring_nodes:
             neighbor.remove_neighbor(selected_node)
             neighbor.remove_color(color)
+
+            if len(neighbor.colors) == 0:
+                neighbor_has_no_colors = True
+
+        # neighbor was left without color to choose
+        if neighbor_has_no_colors:
+            # return selected node to nodes list
+            nodes.append(selected_node)
+
+            # return selected node and color to neighbors
+            for neighbor in neighboring_nodes:
+                neighbor.add_neighbors(selected_node)
+                neighbor.add_color(color)
+
+            return False
 
         # select color for selected node
         selected_node.chosen_color = color
