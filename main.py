@@ -10,9 +10,9 @@ def compare_nodes_func(node1: Node, node2: Node):
         return -1
 
     # in case of tie, most remaining colors
-    if len(node1.colors) > len(node2.neighbors):
+    if len(node1.colors) > len(node2.colors):
         return -1
-    elif len(node1.colors) < len(node2.neighbors):
+    elif len(node1.colors) < len(node2.colors):
         return 1
 
     # in case of tie, compare by index in list (left most node)
@@ -94,14 +94,17 @@ def main():
     nodes = []
 
     # initialize nodes_dict and nodes list
+    index = 0
     for i in range(65, 81):
-        node = Node(chr(i), i)
+        node = Node(chr(i), index)
 
         for color in colors:
             node.add_color(color)
 
         nodes_dict[chr(i)] = node
         nodes.append(node)
+
+        index += 1
 
     # initialize neighbors
     nodes_dict["A"].add_neighbors(nodes_dict["B"], nodes_dict["C"], nodes_dict["D"])
