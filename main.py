@@ -43,7 +43,7 @@ def paint_map(nodes, compare_nodes):
         # remove selected node from nodes list
         nodes.remove(selected_node)
 
-        # remove selected node from neighbors and the chosen color
+        # remove selected node and the chosen color from neighbors
         neighbor_has_no_colors = False
 
         for neighbor in neighboring_nodes:
