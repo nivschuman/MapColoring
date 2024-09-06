@@ -19,7 +19,7 @@ def compare_nodes_func(node1: Node, node2: Node):
     return node1.index - node2.index
 
 
-def main():
+def generate_homework3_nodes():
     colors = ["red", "green", "blue"]
     nodes_dict = dict()
     nodes = []
@@ -55,6 +55,12 @@ def main():
     nodes_dict["O"].add_neighbors(nodes_dict["F"], nodes_dict["P"], nodes_dict["H"])
     nodes_dict["P"].add_neighbors(nodes_dict["N"], nodes_dict["K"], nodes_dict["O"])
 
+    return nodes
+
+
+def main():
+    nodes = generate_homework3_nodes()
+
     excel_map_painter = ExcelMapPainter(nodes, compare_nodes_func, "HW3.xlsx")
     solution_exists = excel_map_painter.paint_map()
 
@@ -64,16 +70,6 @@ def main():
 
     for node in nodes:
         print(f"{node.name} color is {node.chosen_color}")
-
-    # map_painter = MapPainter(nodes, compare_nodes_func)
-    # solution_exists = map_painter.paint_map()
-    #
-    # if not solution_exists:
-    #     print("there is no solution!")
-    #     return
-    #
-    # for node in nodes:
-    #     print(f"{node.name} color is {node.chosen_color}")
 
 
 if __name__ == '__main__':

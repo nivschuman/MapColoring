@@ -154,6 +154,8 @@ class ExcelMapPainter(MapPainter):
 
         # set backtrack column
         self.backtrack_column = chr(column)
+        self.work_sheet[f"{self.backtrack_column}1"] = "Backtracking"
+        self.work_sheet.column_dimensions[f"{self.backtrack_column}"].width = 15
 
         # initialize row
         self.row = 2
