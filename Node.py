@@ -14,14 +14,11 @@ class Node:
             self.colors.append(color)
 
     def remove_color(self, color):
-        if color in self.colors:
-            self.colors.remove(color)
+        if color not in self.colors:
+            return False
 
-    def remove_first_color(self):
-        if len(self.colors) == 0:
-            return None
-
-        return self.colors.pop(0)
+        self.colors.remove(color)
+        return True
 
     def add_neighbors(self, *neighbors):
         for neighbor in neighbors:

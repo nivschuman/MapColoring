@@ -4,9 +4,6 @@ from openpyxl import Workbook
 from openpyxl.styles import PatternFill
 from openpyxl.styles import Font
 
-# todo color should only be added back to neighbor if it was removed from it in the first place...
-# otherwise, duplicate colors occur
-
 
 class MapPainter:
     def __init__(self, nodes, compare_nodes):
@@ -37,9 +34,14 @@ class MapPainter:
             # remove selected node and the chosen color from neighbors
             neighbor_has_no_colors = False
 
+            neighbors_removed_color = []
+
             for neighbor in neighboring_nodes:
                 neighbor.remove_neighbor(selected_node)
-                neighbor.remove_color(color)
+                removed_color = neighbor.remove_color(color)
+
+                if removed_color:
+                    neighbors_removed_color.append(neighbor)
 
                 if len(neighbor.colors) == 0:
                     neighbor_has_no_colors = True
@@ -49,10 +51,14 @@ class MapPainter:
                 # return selected node to nodes list
                 self.nodes.append(selected_node)
 
-                # return selected node and color to neighbors
+                # return selected node and to neighbors
                 for neighbor in neighboring_nodes:
                     neighbor.add_neighbors(selected_node)
+
+                # return color to neighbors that had it removed
+                for neighbor in neighbors_removed_color:
                     neighbor.add_color(color)
+                    neighbor.sort_colors()
 
                 # reset chosen color
                 selected_node.chosen_color = None
@@ -69,10 +75,14 @@ class MapPainter:
             # return selected node to nodes list
             self.nodes.append(selected_node)
 
-            # return selected node and color to neighbors
+            # return selected node and to neighbors
             for neighbor in neighboring_nodes:
                 neighbor.add_neighbors(selected_node)
+
+            # return color to neighbors that had it removed
+            for neighbor in neighbors_removed_color:
                 neighbor.add_color(color)
+                neighbor.sort_colors()
 
             # if map was painted, return found solution
             if painted_map:
@@ -191,9 +201,14 @@ class ExcelMapPainter(MapPainter):
             # remove selected node and the chosen color from neighbors
             neighbor_has_no_colors = False
 
+            neighbors_removed_color = []
+
             for neighbor in neighboring_nodes:
                 neighbor.remove_neighbor(selected_node)
-                neighbor.remove_color(color)
+                color_removed = neighbor.remove_color(color)
+
+                if color_removed:
+                    neighbors_removed_color.append(neighbor)
 
                 if len(neighbor.colors) == 0:
                     neighbor_has_no_colors = True
@@ -228,9 +243,12 @@ class ExcelMapPainter(MapPainter):
                 # return selected node to nodes list
                 self.nodes.append(selected_node)
 
-                # return selected node and color to neighbors
+                # return selected node to neighbors
                 for neighbor in neighboring_nodes:
                     neighbor.add_neighbors(selected_node)
+
+                # return color to neighbors that had it removed
+                for neighbor in neighbors_removed_color:
                     neighbor.add_color(color)
                     neighbor.sort_colors()
 
@@ -252,9 +270,12 @@ class ExcelMapPainter(MapPainter):
             # return selected node to nodes list
             self.nodes.append(selected_node)
 
-            # return selected node and color to neighbors
+            # return selected node to neighbors
             for neighbor in neighboring_nodes:
                 neighbor.add_neighbors(selected_node)
+
+            # return color to neighbors that had it removed
+            for neighbor in neighbors_removed_color:
                 neighbor.add_color(color)
                 neighbor.sort_colors()
 

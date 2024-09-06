@@ -154,7 +154,7 @@ def generate_class_problem_nodes():
 
 
 def main():
-    nodes, compare_nodes_func = generate_class_problem_nodes()
+    nodes, compare_nodes_func = generate_homework3_nodes()
 
     excel_map_painter = ExcelMapPainter(nodes, compare_nodes_func, "Solution.xlsx")
     solution_exists = excel_map_painter.paint_map()
