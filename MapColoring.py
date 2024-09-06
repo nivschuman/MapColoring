@@ -25,8 +25,6 @@ class MapPainter:
         # get all neighboring nodes to selected node
         neighboring_nodes = list(filter(lambda node: selected_node in node.neighbors, self.nodes))
 
-        painted_map = False
-
         for color in selected_node.colors:
             # remove selected node from nodes list
             self.nodes.remove(selected_node)
@@ -186,8 +184,6 @@ class ExcelMapPainter(MapPainter):
 
         # get all neighboring nodes to selected node
         neighboring_nodes = list(filter(lambda node: selected_node in node.neighbors, self.nodes))
-
-        painted_map = False
 
         for color in selected_node.colors:
             cur_row = self.row
