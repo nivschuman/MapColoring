@@ -1,5 +1,5 @@
 from Node import Node
-from functools import cmp_to_key
+from MapColoring import MapPainter, ExcelMapPainter
 
 
 def compare_nodes_func(node1: Node, node2: Node):
@@ -17,75 +17,6 @@ def compare_nodes_func(node1: Node, node2: Node):
 
     # in case of tie, compare by index in list (left most node)
     return node1.index - node2.index
-
-
-# function to select node based on given comparison function
-def select_node(nodes, compare_nodes):
-    sorted_nodes = sorted(nodes, key=cmp_to_key(compare_nodes))
-
-    return None if len(sorted_nodes) == 0 else sorted_nodes[0]
-
-
-# paint map, each node will return with chosen_color property set (if solution exists)
-def paint_map(nodes, compare_nodes):
-    selected_node = select_node(nodes, compare_nodes)
-
-    # all nodes colored
-    if selected_node is None:
-        return True
-
-    # get all neighboring nodes to selected node
-    neighboring_nodes = list(filter(lambda node: selected_node in node.neighbors, nodes))
-
-    painted_map = False
-
-    for color in selected_node.colors:
-        # remove selected node from nodes list
-        nodes.remove(selected_node)
-
-        # remove selected node and the chosen color from neighbors
-        neighbor_has_no_colors = False
-
-        for neighbor in neighboring_nodes:
-            neighbor.remove_neighbor(selected_node)
-            neighbor.remove_color(color)
-
-            if len(neighbor.colors) == 0:
-                neighbor_has_no_colors = True
-
-        # neighbor was left without color to choose
-        if neighbor_has_no_colors:
-            # return selected node to nodes list
-            nodes.append(selected_node)
-
-            # return selected node and color to neighbors
-            for neighbor in neighboring_nodes:
-                neighbor.add_neighbors(selected_node)
-                neighbor.add_color(color)
-
-            # try next color
-            continue
-
-        # select color for selected node
-        selected_node.chosen_color = color
-
-        # paint map recursively
-        painted_map = paint_map(nodes, compare_nodes)
-
-        # return selected node to nodes list
-        nodes.append(selected_node)
-
-        # return selected node and color to neighbors
-        for neighbor in neighboring_nodes:
-            neighbor.add_neighbors(selected_node)
-            neighbor.add_color(color)
-
-        # if map was painted, return found solution
-        if painted_map:
-            return True
-
-    # node failed to paint map with all available colors
-    return False
 
 
 def main():
@@ -124,7 +55,8 @@ def main():
     nodes_dict["O"].add_neighbors(nodes_dict["F"], nodes_dict["P"], nodes_dict["H"])
     nodes_dict["P"].add_neighbors(nodes_dict["N"], nodes_dict["K"], nodes_dict["O"])
 
-    solution_exists = paint_map(nodes, compare_nodes_func)
+    excel_map_painter = ExcelMapPainter(nodes, compare_nodes_func, "HW3.xlsx")
+    solution_exists = excel_map_painter.paint_map()
 
     if not solution_exists:
         print("there is no solution!")
@@ -132,6 +64,16 @@ def main():
 
     for node in nodes:
         print(f"{node.name} color is {node.chosen_color}")
+
+    # map_painter = MapPainter(nodes, compare_nodes_func)
+    # solution_exists = map_painter.paint_map()
+    #
+    # if not solution_exists:
+    #     print("there is no solution!")
+    #     return
+    #
+    # for node in nodes:
+    #     print(f"{node.name} color is {node.chosen_color}")
 
 
 if __name__ == '__main__':
